@@ -4,6 +4,7 @@
   "author": "Brandon Pinto",
   "license": "MIT",
   "scripts": {
+    "start": "webpack-dev-server --open",
     "lint": "eslint . --ext ts",
     "lint:fix": "yarn lint --fix",
     "test": "jest --passWithNoTests --runInBand --no-cache",
