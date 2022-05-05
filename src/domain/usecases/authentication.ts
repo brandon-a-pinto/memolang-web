@@ -1,7 +1,7 @@
 import { AccountModel } from '@/domain/models'
 
 export interface Authentication {
-  auth: (params: any) => Promise<AccountModel>
+  auth: (params: Authentication.Params) => Promise<Authentication.Result>
 }
 
 export namespace Authentication {
@@ -9,4 +9,5 @@ export namespace Authentication {
     email: string
     password: string
   }
+  export type Result = AccountModel
 }

@@ -33,6 +33,9 @@
     "@typescript-eslint/return-await": "off",
     "@typescript-eslint/no-namespace": "off",
     "no-redeclare": "off",
+    "no-unused-vars": "off",
+    "no-use-before-define": "off",
+    "no-useless-constructor": "off",
     "import/export": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error"
