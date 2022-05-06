@@ -17,6 +17,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
+  validationSpy.errorMessage = faker.random.words()
   const sut = render(<Login validation={validationSpy} />)
   return { sut, validationSpy }
 }
@@ -46,5 +47,13 @@ describe('Login Component', () => {
     expect(validationSpy.input).toEqual({
       password
     })
+  })
+
+  it('should show email error if Validation fails', async () => {
+    const { sut, validationSpy } = makeSut()
+    const emailInput = sut.getByTestId('email')
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
+    const emailStatus = sut.getByTestId('email-status')
+    expect(emailStatus.textContent).toBe(validationSpy.errorMessage)
   })
 })
