@@ -8,18 +8,18 @@ import {
 import faker from '@faker-js/faker'
 
 import { Login } from '@/presentation/pages'
-import { ValidationSpy } from '@/tests/presentation/mocks'
+import { ValidationStub } from '@/tests/presentation/mocks'
 
 type SutTypes = {
   sut: RenderResult
-  validationSpy: ValidationSpy
+  validationStub: ValidationStub
 }
 
 const makeSut = (): SutTypes => {
-  const validationSpy = new ValidationSpy()
-  validationSpy.errorMessage = faker.random.words()
-  const sut = render(<Login validation={validationSpy} />)
-  return { sut, validationSpy }
+  const validationStub = new ValidationStub()
+  validationStub.errorMessage = faker.random.words()
+  const sut = render(<Login validation={validationStub} />)
+  return { sut, validationStub }
 }
 
 describe('Login Component', () => {
@@ -33,27 +33,21 @@ describe('Login Component', () => {
     expect(submitButton.disabled).toBe(true)
   })
 
-  it('should call Validation with correct values', async () => {
-    const { sut, validationSpy } = makeSut()
-    const email = faker.internet.email()
-    const password = faker.internet.password()
-    const emailInput = sut.getByTestId('email')
-    const passwordInput = sut.getByTestId('password')
-    fireEvent.input(emailInput, { target: { value: email } })
-    expect(validationSpy.input).toEqual({
-      email
-    })
-    fireEvent.input(passwordInput, { target: { value: password } })
-    expect(validationSpy.input).toEqual({
-      password
-    })
-  })
-
   it('should show email error if Validation fails', async () => {
-    const { sut, validationSpy } = makeSut()
+    const { sut, validationStub } = makeSut()
     const emailInput = sut.getByTestId('email')
     fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
     const emailStatus = sut.getByTestId('email-status')
-    expect(emailStatus.textContent).toBe(validationSpy.errorMessage)
+    expect(emailStatus.textContent).toBe(validationStub.errorMessage)
+  })
+
+  it('should show password error if Validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    const passwordInput = sut.getByTestId('password')
+    fireEvent.input(passwordInput, {
+      target: { value: faker.internet.password() }
+    })
+    const passwordStatus = sut.getByTestId('password-status')
+    expect(passwordStatus.textContent).toBe(validationStub.errorMessage)
   })
 })

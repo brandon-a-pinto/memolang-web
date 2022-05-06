@@ -1,13 +1,9 @@
 import { Validation } from '@/presentation/contracts'
 
-export class ValidationSpy implements Validation {
+export class ValidationStub implements Validation {
   errorMessage: string
-  fieldName: string
-  input: object
 
-  validate(fieldName: string, input: object): string {
-    this.fieldName = fieldName
-    this.input = input
+  validate(_fieldName: string, _input: object): string {
     return this.errorMessage
   }
 }
