@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Styles from './styles.scss'
-import { Spinner, Header, Footer, Input } from '@/presentation/components'
+import { FormStatus, Header, Footer, Input } from '@/presentation/components'
 
 const Login: React.FC = () => {
   return (
@@ -15,10 +15,7 @@ const Login: React.FC = () => {
           Sign in
         </button>
         <span className={Styles.link}>Create account</span>
-        <div className={Styles.errorWrap}>
-          <Spinner className={Styles.spinner} />
-          <span className={Styles.error}>Error</span>
-        </div>
+        <FormStatus />
       </form>
       <Footer />
     </div>

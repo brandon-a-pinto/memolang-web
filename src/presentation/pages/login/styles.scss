@@ -6,12 +6,6 @@
   justify-content: space-between;
   height: 100vh;
 
-  .header {
-    padding: 8px;
-    background-color: $primary;
-    color: $white;
-  }
-
   .form {
     width: 400px;
     display: flex;
@@ -25,25 +19,6 @@
       margin-bottom: 12px;
       text-align: center;
       font-size: 24px;
-    }
-  }
-
-  .footer {
-    height: 32px;
-    background-color: $primary;
-  }
-
-  .inputWrap {
-    display: flex;
-    flex-direction: column;
-
-    input {
-      margin-top: 8px;
-    }
-
-    .status {
-      color: red;
-      font-style: italic;
     }
   }
 
@@ -74,21 +49,6 @@
 
     &:hover {
       text-decoration: underline;
-    }
-  }
-
-  .errorWrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .error {
-      margin-top: 30px;
-      color: red;
-    }
-
-    .spinner {
-      margin-top: 30px;
     }
   }
 }
