@@ -11,9 +11,11 @@ const makeSut = () => {
 describe('Login Component', () => {
   beforeEach(cleanup)
 
-  it('should not render spinner and error on start', async () => {
+  it('should start with initial state', async () => {
     const { sut } = makeSut()
     const errorWrap = sut.getByTestId('error-wrap')
     expect(errorWrap.childElementCount).toBe(0)
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement
+    expect(submitButton.disabled).toBe(true)
   })
 })
