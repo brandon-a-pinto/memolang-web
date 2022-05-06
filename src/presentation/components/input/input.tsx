@@ -19,7 +19,9 @@ const Input: React.FC<Props> = (props: Props) => {
   return (
     <div className={Styles.inputWrap}>
       <input {...props} data-testid={props.name} onChange={handleChange} />
-      <span className={Styles.status}>* Error</span>
+      <span data-testid={`${props.name}-status`} className={Styles.status}>
+        {state[`${props.name}Error`]}
+      </span>
     </div>
   )
 }
