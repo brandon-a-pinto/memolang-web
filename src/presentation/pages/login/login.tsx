@@ -4,9 +4,11 @@ import Styles from './styles.scss'
 import { FormStatus, Header, Footer, Input } from '@/presentation/components'
 import { FormContext } from '@/presentation/contexts'
 import { Validation } from '@/presentation/contracts'
+import { Authentication } from '@/domain/usecases'
 
 type Props = {
   validation: Validation
+  authentication: Authentication
 }
 
 type StateProps = {
@@ -18,7 +20,7 @@ type StateProps = {
   passwordError: string
 }
 
-const Login: React.FC<Props> = ({ validation }: Props) => {
+const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const [state, setState] = useState<StateProps>({
     isLoading: false,
     errorMessage: '',
@@ -37,12 +39,15 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
     })
   }, [state.email, state.password])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault()
     setState({
       ...state,
       isLoading: true
     })
+    await authentication.auth({ email: state.email, password: state.password })
   }
 
   return (
