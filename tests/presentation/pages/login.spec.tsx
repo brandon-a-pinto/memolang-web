@@ -8,6 +8,7 @@ import {
   waitFor
 } from '@testing-library/react'
 import faker from '@faker-js/faker'
+import 'jest-localstorage-mock'
 
 import { Login } from '@/presentation/pages'
 import { ValidationStub, Helper } from '@/tests/presentation/mocks'
@@ -42,6 +43,8 @@ const simulateValidSubmit = async (
 }
 
 describe('Login Component', () => {
+  beforeEach(() => localStorage.clear())
+
   afterEach(cleanup)
 
   it('should start with initial state', () => {
@@ -129,6 +132,15 @@ describe('Login Component', () => {
     expect(screen.getByTestId('error-wrap').children).toHaveLength(1)
     expect(screen.getByTestId('main-error').textContent).toBe(
       `* ${error.message}`
+    )
+  })
+
+  it('should add accessToken to local storage on success', async () => {
+    const { authenticationSpy } = makeSut()
+    await simulateValidSubmit()
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      'accessToken',
+      authenticationSpy.account.accessToken
     )
   })
 })
