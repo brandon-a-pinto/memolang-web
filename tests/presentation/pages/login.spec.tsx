@@ -12,6 +12,7 @@ import faker from '@faker-js/faker'
 import { Login } from '@/presentation/pages'
 import { ValidationStub, Helper } from '@/tests/presentation/mocks'
 import { AuthenticationSpy } from '@/tests/domain/mocks'
+import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   sut: RenderResult
@@ -43,7 +44,7 @@ const simulateValidSubmit = async (
 describe('Login Component', () => {
   afterEach(cleanup)
 
-  it('should start with initial state', async () => {
+  it('should start with initial state', () => {
     const validationError = faker.random.words()
     makeSut(validationError)
     const submitButton = screen.getByTestId('submit') as HTMLButtonElement
@@ -53,33 +54,33 @@ describe('Login Component', () => {
     Helper.testStatusForField('password', validationError)
   })
 
-  it('should show email error if Validation fails', async () => {
+  it('should show email error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut(validationError)
     Helper.populateField('email')
     Helper.testStatusForField('email', validationError)
   })
 
-  it('should show password error if Validation fails', async () => {
+  it('should show password error if Validation fails', () => {
     const validationError = faker.random.words()
     makeSut(validationError)
     Helper.populateField('password')
     Helper.testStatusForField('password', validationError)
   })
 
-  it('should show valid email state if Validation succeeds', async () => {
+  it('should show valid email state if Validation succeeds', () => {
     makeSut()
     Helper.populateField('email')
     Helper.testStatusForField('email')
   })
 
-  it('should show valid password state if Validation succeeds', async () => {
+  it('should show valid password state if Validation succeeds', () => {
     makeSut()
     Helper.populateField('password')
     Helper.testStatusForField('password')
   })
 
-  it('should enable submit button if form is valid', async () => {
+  it('should enable submit button if form is valid', () => {
     makeSut()
     Helper.populateField('email')
     Helper.populateField('password')
@@ -87,13 +88,13 @@ describe('Login Component', () => {
     expect(submitButton.disabled).toBe(false)
   })
 
-  it('should show spinner on submit', async () => {
+  it('should show spinner on submit', () => {
     makeSut()
     simulateValidSubmit()
     expect(screen.getByTestId('spinner')).toBeTruthy()
   })
 
-  it('should call Authentication with correct values', async () => {
+  it('should call Authentication with correct values', () => {
     const { authenticationSpy } = makeSut()
     const email = faker.internet.email()
     const password = faker.internet.password()
@@ -104,20 +105,30 @@ describe('Login Component', () => {
     })
   })
 
-  it('should call Authentication only once', async () => {
+  it('should call Authentication only once', () => {
     const { authenticationSpy } = makeSut()
-    const email = faker.internet.email()
-    const password = faker.internet.password()
-    simulateValidSubmit(email, password)
-    simulateValidSubmit(email, password)
+    simulateValidSubmit()
+    simulateValidSubmit()
     expect(authenticationSpy.callsCount).toBe(1)
   })
 
-  it('should not call Authentication if form is invalid', async () => {
+  it('should not call Authentication if form is invalid', () => {
     const validationError = faker.random.words()
     const { authenticationSpy } = makeSut(validationError)
-    Helper.populateField('email')
-    fireEvent.submit(screen.getByTestId('form'))
+    simulateValidSubmit()
     expect(authenticationSpy.callsCount).toBe(0)
+  })
+
+  it('should present error if Authentication fails', async () => {
+    const { authenticationSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(authenticationSpy, 'auth').mockImplementationOnce(() => {
+      throw error
+    })
+    await simulateValidSubmit()
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(1)
+    expect(screen.getByTestId('main-error').textContent).toBe(
+      `* ${error.message}`
+    )
   })
 })
