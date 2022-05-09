@@ -103,4 +103,13 @@ describe('Login Component', () => {
       password
     })
   })
+
+  it('should call Authentication only once', async () => {
+    const { authenticationSpy } = makeSut()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    simulateValidSubmit(email, password)
+    simulateValidSubmit(email, password)
+    expect(authenticationSpy.callsCount).toBe(1)
+  })
 })
