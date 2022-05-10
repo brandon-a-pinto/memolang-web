@@ -1,34 +1,32 @@
-import React from 'react'
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  RenderResult,
-  waitFor
-} from '@testing-library/react'
+import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
+import { createMemoryHistory } from 'history'
 import faker from '@faker-js/faker'
 import 'jest-localstorage-mock'
 
 import { Login } from '@/presentation/pages'
-import { ValidationStub, Helper } from '@/tests/presentation/mocks'
+import {
+  ValidationStub,
+  Helper,
+  renderWithHistory
+} from '@/tests/presentation/mocks'
 import { AuthenticationSpy } from '@/tests/domain/mocks'
 import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
-  sut: RenderResult
-  validationStub: ValidationStub
   authenticationSpy: AuthenticationSpy
 }
 
+const history = createMemoryHistory({ initialEntries: ['/login'] })
 const makeSut = (validationError?: string): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = validationError
   const authenticationSpy = new AuthenticationSpy()
-  const sut = render(
-    <Login validation={validationStub} authentication={authenticationSpy} />
-  )
-  return { sut, validationStub, authenticationSpy }
+  renderWithHistory({
+    history,
+    Page: () =>
+      Login({ validation: validationStub, authentication: authenticationSpy })
+  })
+  return { authenticationSpy }
 }
 
 const simulateValidSubmit = async (
@@ -142,5 +140,11 @@ describe('Login Component', () => {
       'accessToken',
       authenticationSpy.account.accessToken
     )
+  })
+
+  it('should go to signup page', () => {
+    makeSut()
+    fireEvent.click(screen.getByTestId('signup-link'))
+    expect(history.location.pathname).toBe('/signup')
   })
 })
