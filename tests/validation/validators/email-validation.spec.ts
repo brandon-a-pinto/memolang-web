@@ -13,4 +13,10 @@ describe('EmailValidation', () => {
     const error = sut.validate({ [field]: faker.random.word() })
     expect(error).toEqual(new InvalidFieldError(field))
   })
+
+  it('should return falsy if email is valid', () => {
+    const sut = makeSut()
+    const error = sut.validate({ [field]: faker.internet.email() })
+    expect(error).toBeFalsy()
+  })
 })
