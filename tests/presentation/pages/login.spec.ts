@@ -140,6 +140,7 @@ describe('Login Component', () => {
       'accessToken',
       authenticationSpy.account.accessToken
     )
+    expect(history.location.pathname).toBe('/')
   })
 
   it('should go to signup page', () => {
