@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import Styles from './styles.scss'
 import { FormStatus, Header, Footer, Input } from '@/presentation/components'
@@ -22,6 +22,7 @@ type StateProps = {
 }
 
 const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
+  const navigate = useNavigate()
   const [state, setState] = useState<StateProps>({
     isLoading: false,
     errorMessage: '',
@@ -57,6 +58,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
         password: state.password
       })
       localStorage.setItem('accessToken', account.accessToken)
+      navigate('/')
     } catch (err) {
       setState({
         ...state,
