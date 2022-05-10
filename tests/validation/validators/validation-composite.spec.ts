@@ -29,4 +29,10 @@ describe('ValidationComposite', () => {
     const error = sut.validate(field, { input })
     expect(error).toBe(errorMessage)
   })
+
+  it('should return falsy if every Validation succeeds', () => {
+    const { sut } = makeSut()
+    const error = sut.validate(field, { input })
+    expect(error).toBeFalsy()
+  })
 })
