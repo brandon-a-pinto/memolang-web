@@ -13,7 +13,7 @@ const FormStatus: React.FC = () => {
       {isLoading && <Spinner className={Styles.spinner} />}
       {errorMessage && (
         <span data-testid="main-error" className={Styles.error}>
-          * {errorMessage}
+          {errorMessage}
         </span>
       )}
     </div>

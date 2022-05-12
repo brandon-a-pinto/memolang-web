@@ -128,9 +128,7 @@ describe('Login Component', () => {
     })
     simulateValidSubmit()
     expect(screen.getByTestId('error-wrap').children).toHaveLength(1)
-    expect(screen.getByTestId('main-error').textContent).toBe(
-      `* ${error.message}`
-    )
+    expect(screen.getByTestId('main-error').textContent).toBe(error.message)
   })
 
   it('should add accessToken to local storage on success', async () => {
