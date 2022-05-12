@@ -1,2 +1,2 @@
 export const makeApiUrl = (path: string): string =>
-  `http://localhost:8000${path}`
+  `${process.env.API_URL}${path}`
