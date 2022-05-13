@@ -45,4 +45,15 @@ describe('RemoteAddAccount Usecase', () => {
     const promise = sut.add(mockAddAccountParams())
     await expect(promise).rejects.toThrow(new UnexpectedError())
   })
+
+  it('should return a boolean if HttpClient returns 200', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    const httpResponse = true
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: httpResponse
+    }
+    const res = await sut.add(mockAddAccountParams())
+    expect(res).toEqual(httpResponse)
+  })
 })
