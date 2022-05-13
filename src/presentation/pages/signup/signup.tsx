@@ -1,24 +1,52 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import Styles from './styles.scss'
 import { FormStatus, Header, Footer, Input } from '@/presentation/components'
 import { FormContext } from '@/presentation/contexts'
+import { Validation } from '@/presentation/contracts'
+
+type Props = {
+  validation: Validation
+}
 
 type StateProps = {
+  isLoading: boolean
+  email: string
   emailError: string
+  username: string
   usernameError: string
+  password: string
   passwordError: string
+  passwordConfirmation: string
   passwordConfirmationError: string
 }
 
-const SignUp: React.FC = () => {
+const SignUp: React.FC<Props> = ({ validation }: Props) => {
   const [state, setState] = useState<StateProps>({
-    emailError: 'Invalid field',
-    usernameError: 'Invalid field',
-    passwordError: 'Invalid field',
-    passwordConfirmationError: 'Invalid field'
+    isLoading: false,
+    email: '',
+    emailError: '',
+    username: '',
+    usernameError: '',
+    password: '',
+    passwordError: '',
+    passwordConfirmation: '',
+    passwordConfirmationError: ''
   })
+
+  useEffect(() => {
+    const { email, username, password, passwordConfirmation } = state
+    setState({
+      ...state,
+      emailError: validation.validate('email', { email }),
+      usernameError: validation.validate('username', { username }),
+      passwordError: validation.validate('password', { password }),
+      passwordConfirmationError: validation.validate('passwordConfirmation', {
+        passwordConfirmation
+      })
+    })
+  }, [state.email, state.username, state.password, state.passwordConfirmation])
 
   return (
     <div className={Styles.signup}>
