@@ -19,6 +19,10 @@ const makeSut = (validationError?: string): void => {
   })
 }
 
+const simulateValidSubmit = async () => {
+  Helper.populateField('email')
+}
+
 describe('SignUp Component', () => {
   afterEach(cleanup)
 
@@ -83,5 +87,14 @@ describe('SignUp Component', () => {
     makeSut()
     Helper.populateField('passwordConfirmation')
     Helper.testStatusForField('passwordConfirmation')
+  })
+
+  it('should enable submit button if form is valid', () => {
+    makeSut()
+    Helper.populateField('email')
+    Helper.populateField('username')
+    Helper.populateField('password')
+    Helper.populateField('passwordConfirmation')
+    expect(screen.getByTestId('submit')).toBeEnabled()
   })
 })
