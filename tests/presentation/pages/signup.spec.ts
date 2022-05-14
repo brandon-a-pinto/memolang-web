@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker'
-import { screen, cleanup } from '@testing-library/react'
+import { screen, cleanup, fireEvent, waitFor } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 
 import { SignUp } from '@/presentation/pages'
@@ -8,19 +8,37 @@ import {
   Helper,
   ValidationStub
 } from '@/tests/presentation/mocks'
+import { AddAccountSpy } from '@/tests/domain/mocks'
 
-const history = createMemoryHistory({ initialEntries: ['/signup'] })
-const makeSut = (validationError?: string): void => {
-  const validationStub = new ValidationStub()
-  validationStub.errorMessage = validationError
-  renderWithHistory({
-    history,
-    Page: () => SignUp({ validation: validationStub })
-  })
+type SutTypes = {
+  addAccountSpy: AddAccountSpy
 }
 
-const simulateValidSubmit = async () => {
-  Helper.populateField('email')
+const history = createMemoryHistory({ initialEntries: ['/signup'] })
+const makeSut = (validationError?: string): SutTypes => {
+  const validationStub = new ValidationStub()
+  validationStub.errorMessage = validationError
+  const addAccountSpy = new AddAccountSpy()
+  renderWithHistory({
+    history,
+    Page: () =>
+      SignUp({ validation: validationStub, addAccount: addAccountSpy })
+  })
+  return { addAccountSpy }
+}
+
+const simulateValidSubmit = async (
+  email: string = faker.internet.email(),
+  username: string = faker.internet.userName(),
+  password: string = faker.internet.password()
+): Promise<void> => {
+  Helper.populateField('email', email)
+  Helper.populateField('username', username)
+  Helper.populateField('password', password)
+  Helper.populateField('passwordConfirmation', password)
+  const form = screen.getByTestId('form')
+  fireEvent.submit(form)
+  await waitFor(() => form)
 }
 
 describe('SignUp Component', () => {
@@ -96,5 +114,11 @@ describe('SignUp Component', () => {
     Helper.populateField('password')
     Helper.populateField('passwordConfirmation')
     expect(screen.getByTestId('submit')).toBeEnabled()
+  })
+
+  it('should show spinner on submit', async () => {
+    makeSut()
+    await simulateValidSubmit()
+    expect(screen.getByTestId('spinner')).toBeEnabled()
   })
 })
