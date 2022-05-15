@@ -111,7 +111,7 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
           >
             Create account
           </button>
-          <Link to="/login" className={Styles.link}>
+          <Link data-testid="login-link" to="/login" className={Styles.link}>
             Already have an account?
           </Link>
           <FormStatus />
