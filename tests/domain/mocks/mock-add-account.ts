@@ -15,9 +15,11 @@ export const mockAddAccountParams = (): AddAccount.Params => {
 export class AddAccountSpy implements AddAccount {
   params: AddAccount.Params
   result = true
+  callsCount = 0
 
   async add(params: AddAccount.Params): Promise<boolean> {
     this.params = params
+    this.callsCount++
     return this.result
   }
 }
