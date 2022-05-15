@@ -161,4 +161,10 @@ describe('SignUp Component', () => {
     expect(screen.getByTestId('error-wrap').children).toHaveLength(1)
     expect(screen.getByTestId('main-error').textContent).toBe(error.message)
   })
+
+  it('should go to login page', () => {
+    makeSut()
+    fireEvent.click(screen.getByTestId('login-link'))
+    expect(history.location.pathname).toBe('/login')
+  })
 })
