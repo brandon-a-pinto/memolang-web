@@ -9,6 +9,7 @@ import {
   ValidationStub
 } from '@/tests/presentation/mocks'
 import { AddAccountSpy } from '@/tests/domain/mocks'
+import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   addAccountSpy: AddAccountSpy
@@ -148,5 +149,16 @@ describe('SignUp Component', () => {
     const { addAccountSpy } = makeSut(validationError)
     await simulateValidSubmit()
     expect(addAccountSpy.callsCount).toBe(0)
+  })
+
+  it('should present error if AddAccount fails', async () => {
+    const { addAccountSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(addAccountSpy, 'add').mockImplementationOnce(() => {
+      throw error
+    })
+    await simulateValidSubmit()
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(1)
+    expect(screen.getByTestId('main-error').textContent).toBe(error.message)
   })
 })
