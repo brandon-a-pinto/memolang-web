@@ -22,3 +22,14 @@ input[type='text'] {
   outline: none;
   padding-left: 4px;
 }
+
+button {
+  &:hover {
+    opacity: 0.92;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 1;
+  }
+}
