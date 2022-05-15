@@ -121,4 +121,18 @@ describe('SignUp Component', () => {
     await simulateValidSubmit()
     expect(screen.getByTestId('spinner')).toBeEnabled()
   })
+
+  it('should call AddAccount with correct values', async () => {
+    const { addAccountSpy } = makeSut()
+    const email = faker.internet.email()
+    const username = faker.internet.userName()
+    const password = faker.internet.password()
+    await simulateValidSubmit(email, username, password)
+    expect(addAccountSpy.params).toEqual({
+      email,
+      username,
+      password,
+      passwordConfirmation: password
+    })
+  })
 })
