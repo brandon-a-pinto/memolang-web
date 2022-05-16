@@ -1,6 +1,6 @@
 {
-  "name": "web",
-  "version": "0.0.2",
+  "name": "memolang-web",
+  "version": "0.0.3",
   "author": "Brandon Pinto",
   "license": "MIT",
   "scripts": {
